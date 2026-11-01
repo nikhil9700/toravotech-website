@@ -7,59 +7,59 @@ export type Service = {
 
 export const services: Service[] = [
   {
-    slug: "custom-software",
-    title: "Custom Software",
-    summary: "Purpose-built applications tailored to how your team actually works.",
+    slug: "mobile",
+    title: "iOS & Android apps",
+    summary: "Store-ready mobile apps — the same path used for Valid Posting and Nirut IT.",
     detail:
-      "From internal tools to customer-facing platforms, we design and ship software that fits your workflows — not the other way around.",
-  },
-  {
-    slug: "ai-ml",
-    title: "AI & Machine Learning",
-    summary: "Practical AI features that improve search, content, and decisions.",
-    detail:
-      "We integrate modern AI capabilities — assistants, smart search, content helpers, and moderation aids — where they create clear product value.",
-  },
-  {
-    slug: "cloud-aws",
-    title: "Cloud & AWS",
-    summary: "Reliable cloud architecture for apps that need to scale cleanly.",
-    detail:
-      "Hosting, databases, auth, and serverless patterns configured for security, observability, and straightforward operations.",
-  },
-  {
-    slug: "cybersecurity",
-    title: "Cybersecurity",
-    summary: "Security-minded engineering baked into product design.",
-    detail:
-      "Auth flows, rate limits, CAPTCHA, moderation queues, and privacy-first defaults — so trust is part of the product, not an afterthought.",
+      "Design through App Store and Google Play submission. Hybrid or native shells, listings, and a maintenance pathway after launch.",
   },
   {
     slug: "website",
-    title: "Website Development",
-    summary: "Fast, accessible marketing and product sites that convert.",
+    title: "Product websites",
+    summary: "Fast web apps and marketing sites that ship with the mobile product.",
     detail:
-      "Responsive web experiences with strong SEO foundations, clear information architecture, and polished interaction design.",
+      "Responsive product experiences with clear architecture and SEO foundations — built to match the app, not as a disconnected brochure.",
   },
   {
-    slug: "mobile",
-    title: "iOS & Android",
-    summary: "Native and hybrid mobile apps shipped to the App Store and Play.",
+    slug: "custom-software",
+    title: "Full product builds",
+    summary: "End-to-end applications from idea to production under one builder.",
     detail:
-      "Mobile shells and full apps for iOS and Android, including store listing readiness and ongoing maintenance pathways.",
+      "Customer-facing platforms and workflows designed, coded, and deployed without agency handoffs or invented team size.",
+  },
+  {
+    slug: "ai-ml",
+    title: "Practical AI features",
+    summary: "AI that helps listings, search, content, and moderation where it earns its place.",
+    detail:
+      "Assistants, smart helpers, and content tools wired into real products — the kind already used in shipping portfolio work.",
+  },
+  {
+    slug: "cloud-aws",
+    title: "Cloud & hosting",
+    summary: "Production hosting and data so the app stays up after launch day.",
+    detail:
+      "Databases, auth, and deploy targets (Vercel, Render, AWS patterns) configured for products that are already live.",
+  },
+  {
+    slug: "cybersecurity",
+    title: "Trust & security",
+    summary: "Auth, OTP, rate limits, and privacy defaults baked into the product.",
+    detail:
+      "Security as part of shipping — not a separate slide. Moderation and access patterns proven in live marketplaces and communities.",
   },
   {
     slug: "devops",
-    title: "DevOps",
-    summary: "CI/CD, environments, and deploy pipelines that keep releases calm.",
+    title: "Ship & iterate",
+    summary: "CI/CD and release pipelines so updates stay calm after v1.",
     detail:
-      "Automated builds, previews, and production deploys so shipping stays repeatable as the product grows.",
+      "Automated builds and production deploys so the product can improve without drama once users are on it.",
   },
   {
     slug: "it-consulting",
-    title: "IT Consulting",
-    summary: "Clear technical guidance for product and infrastructure decisions.",
+    title: "Build guidance",
+    summary: "Honest stack and scope advice grounded in products that already shipped.",
     detail:
-      "Architecture reviews, stack choices, and implementation roadmaps grounded in shipping real products end-to-end.",
+      "Architecture and roadmap conversations from someone who designs, codes, and launches — not a pure slide-deck consultancy.",
   },
 ];

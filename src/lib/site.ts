@@ -3,7 +3,7 @@ export const siteConfig = {
   legalName: "ToravoTech",
   tagline: "Engineering Tomorrow's Technology.",
   description:
-    "ToravoTech designs and builds mobile apps, websites, software, cloud, and AI solutions. Founded and built by Thakur Nikhil Singh.",
+    "ToravoTech ships real mobile apps and websites end-to-end. Founder Thakur Nikhil Singh designed, built, and launched live products including Valid Posting and Nirut IT.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://toravotech.com",
   email: "thakurnikhilsingh4@gmail.com",
   phone: "9403314628",
@@ -19,8 +19,7 @@ export const siteConfig = {
 export const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
-  { href: "/services", label: "Services" },
+  { href: "/services", label: "How we build" },
   { href: "/portfolio", label: "Portfolio" },
   { href: "/technologies", label: "Technologies" },
-  { href: "/contact", label: "Contact" },
 ] as const;

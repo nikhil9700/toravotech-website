@@ -6,8 +6,8 @@ export function PortfolioCard({ project }: { project: PortfolioProject }) {
   const hero = project.images[0];
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
-      <div className="relative aspect-[16/10] overflow-hidden bg-navy-deep">
+    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/3">
+      <div className="relative aspect-16/10 shrink-0 overflow-hidden bg-navy-deep">
         <div
           className="absolute inset-0 opacity-70"
           style={{
@@ -23,8 +23,8 @@ export function PortfolioCard({ project }: { project: PortfolioProject }) {
           sizes="(max-width: 768px) 100vw, 50vw"
         />
       </div>
-      <div className="space-y-4 p-6 sm:p-8">
-        <div className="flex flex-wrap gap-2">
+      <div className="flex flex-1 flex-col gap-4 p-6 sm:p-8">
+        <div className="flex min-h-6 flex-wrap gap-x-2 gap-y-1">
           {project.tags.map((tag) => (
             <span
               key={tag}
@@ -54,7 +54,7 @@ export function PortfolioCard({ project }: { project: PortfolioProject }) {
             </span>
           ))}
         </div>
-        <div className="flex flex-wrap gap-3 pt-2">
+        <div className="mt-auto flex flex-wrap gap-3 pt-4">
           <Button href={project.url} external variant="primary">
             Visit site
           </Button>

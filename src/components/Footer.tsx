@@ -9,8 +9,9 @@ export function Footer() {
         <div>
           <Logo />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
-            {siteConfig.tagline} Built end-to-end by{" "}
-            {siteConfig.founder.name} — founder & creator.
+            We ship live apps and websites. Built end-to-end by{" "}
+            {siteConfig.founder.name} — founder & creator. Proof: Valid Posting
+            and Nirut IT.
           </p>
         </div>
         <div>
@@ -18,7 +19,7 @@ export function Footer() {
             Navigate
           </h2>
           <ul className="mt-4 space-y-2">
-            {navLinks.map((link) => (
+            {[...navLinks, { href: "/contact", label: "Contact" }].map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}

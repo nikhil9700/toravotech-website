@@ -16,8 +16,8 @@ export default function PortfolioPage() {
   return (
     <>
       <PageHero
-        title="Portfolio"
-        description="Live products designed, developed, and shipped by ToravoTech’s founder. These are founder-built products — not ToravoTech client engagements."
+        title="Shipping proof"
+        description="Two live products — web, App Store, and Google Play. Designed and shipped by ToravoTech’s founder. Open every link yourself. Not ToravoTech client case studies."
       />
       <Section>
         <div className="space-y-20">
@@ -74,21 +74,27 @@ export default function PortfolioPage() {
                   </div>
                 </div>
                 <div
-                  className={`grid gap-4 sm:grid-cols-2 ${
-                    index % 2 === 1 ? "lg:order-1" : ""
-                  }`}
+                  className={`${
+                    project.images.length >= 3
+                      ? "grid grid-cols-3 gap-3 sm:gap-4"
+                      : "grid grid-cols-2 gap-3 sm:gap-4"
+                  } ${index % 2 === 1 ? "lg:order-1" : ""}`}
                 >
                   {project.images.map((img) => (
                     <div
                       key={img.src}
-                      className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-white/10 bg-navy-deep"
+                      className="relative aspect-3/4 overflow-hidden rounded-2xl border border-white/10 bg-navy-deep"
                     >
                       <Image
                         src={img.src}
                         alt={img.alt}
                         fill
                         className="object-cover object-top"
-                        sizes="(max-width: 768px) 100vw, 40vw"
+                        sizes={
+                          project.images.length >= 3
+                            ? "(max-width: 1024px) 33vw, 15vw"
+                            : "(max-width: 768px) 50vw, 20vw"
+                        }
                       />
                     </div>
                   ))}

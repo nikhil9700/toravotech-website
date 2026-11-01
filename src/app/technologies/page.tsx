@@ -18,10 +18,10 @@ export default function TechnologiesPage() {
         description="Tools and platforms used to design, build, and operate products. Listed as working expertise — not as vendor partnerships or certifications."
       />
       <Section>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {technologyGroups.map((group, index) => (
-            <FadeIn key={group.category} delayMs={index * 50}>
-              <div className="h-full rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+            <FadeIn key={group.category} className="h-full" delayMs={index * 50}>
+              <div className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/2 p-6">
                 <h2 className="font-display text-xl font-semibold text-white">
                   {group.category}
                 </h2>

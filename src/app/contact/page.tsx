@@ -16,7 +16,7 @@ export default function ContactPage() {
     <>
       <PageHero
         title="Contact"
-        description="Share what you’re building. Reach ToravoTech’s founder directly — no sales queue, no fabricated team."
+        description="Tell us about the app or site you want live. You’ll talk to the founder who already shipped Valid Posting and Nirut IT — no sales queue, no fabricated team."
       />
       <Section>
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
@@ -60,7 +60,7 @@ export default function ContactPage() {
             </div>
           </FadeIn>
           <FadeIn delayMs={80}>
-            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
+            <div className="rounded-2xl border border-white/10 bg-white/2 p-6 sm:p-8">
               <h2 className="font-display text-2xl font-semibold text-white">
                 Send a message
               </h2>

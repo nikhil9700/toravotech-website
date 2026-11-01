@@ -4,13 +4,32 @@ import { FadeIn } from "@/components/FadeIn";
 import { PortfolioCard } from "@/components/PortfolioCard";
 import { Section, SectionHeading } from "@/components/Section";
 import { portfolioProjects } from "@/lib/portfolio";
-import { services } from "@/lib/services";
 import { siteConfig } from "@/lib/site";
+
+const buildSteps = [
+  {
+    n: "01",
+    title: "Design the product",
+    detail:
+      "Screens, flows, and store-ready structure before a line of shipping code is wasted.",
+  },
+  {
+    n: "02",
+    title: "Build web + mobile",
+    detail:
+      "Full product on web, iOS, and Android — not mockups only, not handoffs to another team.",
+  },
+  {
+    n: "03",
+    title: "Ship to real users",
+    detail:
+      "App Store, Google Play, and production hosting. Live links you can open and verify.",
+  },
+] as const;
 
 export default function HomePage() {
   return (
     <>
-      {/* Hero — brand-first, full-bleed atmosphere, one job */}
       <section className="relative isolate min-h-[88vh] overflow-hidden border-b border-white/8">
         <div
           className="absolute inset-0"
@@ -31,121 +50,125 @@ export default function HomePage() {
             Toravo<span className="text-electric">Tech</span>
           </p>
           <h1 className="animate-rise-delay mt-5 max-w-2xl font-display text-2xl font-medium tracking-tight text-slate-100 sm:text-3xl md:text-4xl">
-            {siteConfig.tagline}
+            We design, build, and ship apps — with live proof.
           </h1>
           <p className="animate-rise-delay-2 mt-5 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-            Mobile apps, websites, software, cloud, and AI — designed, developed,
-            and shipped by founder {siteConfig.founder.name}.
+            Two founder-built products are already live on the web, App Store,
+            and Google Play. That same end-to-end craft is how ToravoTech builds
+            the next one.
           </p>
           <div className="animate-rise-delay-2 mt-10 flex flex-wrap gap-3">
             <Button href="/portfolio" variant="primary">
-              View portfolio
+              See shipping proof
             </Button>
             <Button href="/contact" variant="secondary">
-              Start a conversation
+              Talk about your app
             </Button>
           </div>
         </div>
       </section>
 
-      <Section>
+      <Section className="border-b border-white/8 bg-navy-deep/60">
         <FadeIn>
           <SectionHeading
-            eyebrow="Services"
-            title="Eight ways we build and ship"
-            description="End-to-end product engineering across software, AI, cloud, security, web, mobile, DevOps, and consulting."
+            eyebrow="Shipping proof"
+            title="Two live products. Open them yourself."
+            description="Valid Posting and Nirut IT were designed, developed, and launched by ToravoTech’s founder — web apps plus iOS and Android store listings. Not concept decks. Not client work attributed to a larger agency."
           />
         </FadeIn>
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {services.map((service, index) => (
-            <FadeIn key={service.slug} delayMs={index * 40}>
-              <a
-                href={`/services#${service.slug}`}
-                className="group block h-full rounded-xl border border-white/10 bg-white/[0.02] p-5 transition hover:border-electric/40 hover:bg-white/[0.04]"
-              >
-                <h3 className="font-display text-lg font-semibold text-white group-hover:text-electric-bright">
-                  {service.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-400">
-                  {service.summary}
-                </p>
-              </a>
-            </FadeIn>
-          ))}
-        </div>
-      </Section>
-
-      <Section className="border-y border-white/8 bg-navy-deep/60">
-        <FadeIn>
-          <SectionHeading
-            eyebrow="Portfolio"
-            title="Founder-built products, live in production"
-            description="Real apps and sites designed and shipped by ToravoTech’s founder — not ToravoTech client work."
-          />
-        </FadeIn>
-        <div className="mt-12 grid gap-8 lg:grid-cols-2">
+        <div className="mt-12 grid items-stretch gap-8 lg:grid-cols-2">
           {portfolioProjects.map((project, index) => (
-            <FadeIn key={project.slug} delayMs={index * 80}>
+            <FadeIn key={project.slug} className="h-full" delayMs={index * 80}>
               <PortfolioCard project={project} />
             </FadeIn>
           ))}
         </div>
         <div className="mt-10">
           <Button href="/portfolio" variant="secondary">
-            Explore portfolio
+            Full portfolio detail
           </Button>
         </div>
       </Section>
 
       <Section>
+        <FadeIn>
+          <SectionHeading
+            eyebrow="How we build"
+            title="The same path for every product"
+            description="When a brand needs an app, ToravoTech runs one clear loop: design → build → ship. No sales theater — just the process that already put two products in production."
+          />
+        </FadeIn>
+        <ol className="mt-12 grid gap-6 md:grid-cols-3">
+          {buildSteps.map((step, index) => (
+            <FadeIn key={step.n} delayMs={index * 60}>
+              <li className="border-l-2 border-electric pl-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-electric">
+                  {step.n}
+                </p>
+                <h3 className="mt-3 font-display text-xl font-semibold text-white">
+                  {step.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                  {step.detail}
+                </p>
+              </li>
+            </FadeIn>
+          ))}
+        </ol>
+      </Section>
+
+      <Section className="border-y border-white/8">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <FadeIn>
             <SectionHeading
-              eyebrow="Approach"
-              title="One builder. Full ownership."
-              description={`${siteConfig.founder.name} is the founder and sole builder behind ToravoTech and the products showcased here — design, development, and deployment under one roof.`}
+              eyebrow="Who builds it"
+              title="One founder. Full ownership."
+              description={`${siteConfig.founder.name} designs, develops, and deploys under ToravoTech — so the person who ships the portfolio is the same person who would ship your app.`}
             />
             <div className="mt-8 flex flex-wrap gap-3">
               <Button href="/about" variant="primary">
                 About ToravoTech
               </Button>
               <Button href="/technologies" variant="secondary">
-                Technologies
+                Stack we ship with
               </Button>
             </div>
           </FadeIn>
           <FadeIn delayMs={120}>
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-navy-mid/40 p-6">
               <div className="grid grid-cols-2 gap-3">
-                {portfolioProjects.flatMap((p) => p.images.slice(0, 2)).map((img) => (
-                  <div
-                    key={img.src}
-                    className="relative aspect-[3/4] overflow-hidden rounded-xl bg-navy-deep"
-                  >
-                    <Image
-                      src={img.src}
-                      alt={img.alt}
-                      fill
-                      className="object-cover object-top"
-                      sizes="(max-width: 1024px) 40vw, 20vw"
-                    />
-                  </div>
-                ))}
+                {portfolioProjects
+                  .flatMap((p) => p.images.slice(0, 2))
+                  .map((img) => (
+                    <div
+                      key={img.src}
+                      className="relative aspect-3/4 overflow-hidden rounded-xl bg-navy-deep"
+                    >
+                      <Image
+                        src={img.src}
+                        alt={img.alt}
+                        fill
+                        className="object-cover object-top"
+                        sizes="(max-width: 1024px) 40vw, 20vw"
+                      />
+                    </div>
+                  ))}
               </div>
             </div>
           </FadeIn>
         </div>
       </Section>
 
-      <Section className="border-t border-white/8">
+      <Section>
         <FadeIn>
-          <div className="rounded-2xl border border-electric/25 bg-gradient-to-br from-electric/15 via-transparent to-transparent px-6 py-12 text-center sm:px-12">
+          <div className="rounded-2xl border border-electric/25 bg-linear-to-br from-electric/15 via-transparent to-transparent px-6 py-12 text-center sm:px-12">
             <h2 className="font-display text-3xl font-semibold text-white sm:text-4xl">
-              Ready to engineer what’s next?
+              Have a product that needs to ship?
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-slate-300">
-              Tell us about the product you want to launch or improve. We’ll
-              reply from {siteConfig.email}.
+              Share the app or site you want live. We’ll reply from{" "}
+              {siteConfig.email} with a clear build path — grounded in products
+              that already exist.
             </p>
             <div className="mt-8 flex justify-center">
               <Button href="/contact" variant="primary">

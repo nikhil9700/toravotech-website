@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 type Variant = "primary" | "secondary" | "ghost";
 
@@ -10,7 +10,9 @@ type CommonProps = {
 };
 
 type ButtonAsButton = CommonProps &
-  React.ButtonHTMLAttributes<HTMLButtonElement> & { href?: undefined };
+  Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className" | "children"> & {
+    href?: undefined;
+  };
 
 type ButtonAsLink = CommonProps & {
   href: string;
@@ -29,11 +31,10 @@ const base =
   "inline-flex items-center justify-center gap-2 rounded-md px-5 py-2.5 text-sm font-medium transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy disabled:opacity-50";
 
 export function Button(props: ButtonAsButton | ButtonAsLink) {
-  const { children, className = "", variant = "primary" } = props;
-  const classes = `${base} ${variants[variant]} ${className}`;
-
   if ("href" in props && props.href) {
-    const { href, external } = props;
+    const { children, className = "", variant = "primary", href, external } =
+      props;
+    const classes = `${base} ${variants[variant]} ${className}`;
     if (external) {
       return (
         <a
@@ -53,9 +54,18 @@ export function Button(props: ButtonAsButton | ButtonAsLink) {
     );
   }
 
-  const { href: _h, ...buttonProps } = props as ButtonAsButton;
+  const buttonProps = props as ButtonAsButton;
+  const {
+    children,
+    className = "",
+    variant = "primary",
+    type = "button",
+    ...rest
+  } = buttonProps;
+  const classes = `${base} ${variants[variant]} ${className}`;
+
   return (
-    <button type="button" className={classes} {...buttonProps}>
+    <button type={type} className={classes} {...rest}>
       {children}
     </button>
   );
