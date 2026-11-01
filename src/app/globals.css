@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+:root {
+  --navy: #0a1628;
+  --navy-deep: #060d18;
+  --navy-mid: #122038;
+  --electric: #2b8cff;
+  --electric-bright: #4a9fff;
+  --white: #ffffff;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --background: var(--navy);
+  --foreground: var(--white);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-navy: var(--navy);
+  --color-navy-deep: var(--navy-deep);
+  --color-navy-mid: var(--navy-mid);
+  --color-electric: var(--electric);
+  --color-electric-bright: var(--electric-bright);
+  --font-sans: var(--font-manrope);
+  --font-display: var(--font-syne);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-manrope), ui-sans-serif, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-syne), ui-sans-serif, sans-serif;
+}
+
+/* Subtle grid atmosphere for hero planes */
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(43, 140, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(43, 140, 255, 0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent 75%);
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.04);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 7s ease-in-out infinite;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-rise {
+  animation: rise-in 0.9s ease-out both;
+}
+
+.animate-rise-delay {
+  animation: rise-in 0.9s ease-out 0.15s both;
+}
+
+.animate-rise-delay-2 {
+  animation: rise-in 0.9s ease-out 0.3s both;
+}

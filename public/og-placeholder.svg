@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none" role="img" aria-label="ToravoTech">
+  <rect width="1200" height="630" fill="#0A1628"/>
+  <circle cx="980" cy="120" r="220" fill="#2B8CFF" fill-opacity="0.18"/>
+  <circle cx="180" cy="520" r="180" fill="#2B8CFF" fill-opacity="0.1"/>
+  <rect x="96" y="210" width="88" height="88" rx="20" fill="#0A1628" stroke="#2B8CFF" stroke-width="2"/>
+  <path d="M114 230h52v10H144v36h-12v-36h-18v-10z" fill="#FFFFFF"/>
+  <path d="M148 262c8.5 0 15.4 4.4 15.4 10.5h-9.2c0-2.2-2.5-4-5.8-4s-5.8 1.8-5.8 4H134c0-6.1 6.5-10.5 14-10.5z" fill="#2B8CFF"/>
+  <circle cx="160" cy="248" r="4.2" fill="#2B8CFF"/>
+  <text x="210" y="268" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="700">ToravoTech</text>
+  <text x="96" y="360" fill="#CBD5E1" font-family="Arial, Helvetica, sans-serif" font-size="36">Engineering Tomorrow's Technology.</text>
+  <text x="96" y="520" fill="#64748B" font-family="Arial, Helvetica, sans-serif" font-size="22">toravotech.com</text>
+</svg>
