@@ -59,16 +59,29 @@ See `.env.example`:
 - Path: `/proposals/slate-milk`
 - Not linked from public navigation
 - Clearly labeled unofficial / pending approval
-- When `PROPOSAL_SECRET` is set, open with `?key=<secret>` (sets an HTTP-only cookie)
+- Hosted statically on GitHub Pages (unlisted URL + `noindex`; no server-side `PROPOSAL_SECRET`)
 
-## Vercel deploy notes (do not deploy without approval)
+## Deploy: GitHub Pages + Namecheap (no Vercel)
 
-1. Push this repo to GitHub/GitLab when ready.
-2. Import the project in [Vercel](https://vercel.com).
-3. Set env vars from `.env.example` (especially `NEXT_PUBLIC_SITE_URL` and optional `PROPOSAL_SECRET`).
-4. Framework preset: Next.js. Build: `next build`. Output: default.
-5. Point `toravotech.com` DNS only after Nikhil approves go-live.
-6. Keep `/proposals/` disallowed in robots (already configured).
+This app builds as a **static export** (`output: "export"`) and deploys via GitHub Actions to GitHub Pages.
+
+1. Push to `main` (workflow: `.github/workflows/deploy-pages.yml`).
+2. Repo **Settings → Pages → Source: GitHub Actions**.
+3. Custom domain: `toravotech.com` (CNAME file is in `public/CNAME`).
+4. In **Namecheap → Domain List → toravotech.com → Advanced DNS**, set:
+
+| Type | Host | Value |
+|------|------|--------|
+| A | `@` | `185.199.108.153` |
+| A | `@` | `185.199.109.153` |
+| A | `@` | `185.199.110.153` |
+| A | `@` | `185.199.111.153` |
+| CNAME | `www` | `nikhil9700.github.io` |
+
+5. Remove conflicting URL Redirect / old A / CNAME for `@` and `www`.
+6. After DNS verifies in GitHub Pages, enable **Enforce HTTPS**.
+
+**Note:** GitHub Pages on a **private** repo needs GitHub Pro. On Free plan, make the repo **public** (or upgrade). The Slate proposal source is then visible in the repo — keep sharing the live URL carefully.
 
 ## Brand
 
