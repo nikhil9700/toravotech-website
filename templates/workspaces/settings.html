@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Workspace — {{ workspace.name }}{% endblock %}
+
+{% block content %}
+<section class="section narrow">
+  <h1>{{ workspace.name }}</h1>
+  <p class="section-lede">Slug: {{ workspace.slug }}</p>
+
+  <h2>Members</h2>
+  <ul class="plain-list">
+    {% for membership in memberships %}
+      <li>{{ membership.user.email }} · {{ membership.get_role_display }}</li>
+    {% endfor %}
+  </ul>
+
+  {% if can_manage %}
+    <h2>Invite</h2>
+    <form method="post" action="{% url 'workspaces:invite' %}" class="stack-form">
+      {% csrf_token %}
+      <p>
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required>
+      </p>
+      <p>
+        <label for="role">Role</label>
+        <select id="role" name="role">
+          <option value="viewer">Viewer</option>
+          <option value="owner">Owner</option>
+        </select>
+      </p>
+      <button class="btn" type="submit">Create invitation</button>
+    </form>
+  {% endif %}
+
+  <h2>Pending invitations</h2>
+  <ul class="plain-list">
+    {% for invitation in invitations %}
+      <li>{{ invitation.email }} · {{ invitation.get_role_display }} · expires {{ invitation.expires_at }}</li>
+    {% empty %}
+      <li class="muted">None</li>
+    {% endfor %}
+  </ul>
+
+  {% if user_workspaces|length > 1 %}
+    <h2>Switch workspace</h2>
+    <ul class="plain-list">
+      {% for ws in user_workspaces %}
+        <li>
+          {% if ws.id == workspace.id %}
+            <strong>{{ ws.name }}</strong> (current)
+          {% else %}
+            <a href="{% url 'workspaces:switch' ws.id %}">{{ ws.name }}</a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</section>
+{% endblock %}

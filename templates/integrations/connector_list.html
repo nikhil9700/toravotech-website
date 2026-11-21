@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Connections — {{ workspace.name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="section-head">
+    <h1>Connections</h1>
+    {% if can_manage %}
+      <a class="btn" href="{% url 'integrations:connector_create' %}">Add connector</a>
+    {% endif %}
+  </div>
+  <ul class="plain-list">
+    {% for connector in connectors %}
+      <li>
+        <strong>{{ connector.name }}</strong>
+        <span class="muted">{{ connector.get_kind_display }} · {{ connector.get_status_display }}</span>
+        {% if can_manage %}
+          <a href="{% url 'integrations:connector_edit' connector.id %}">Edit</a>
+        {% endif %}
+      </li>
+    {% empty %}
+      <li class="muted">No connectors yet. Add S3 or Snowflake to wire live checks.</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

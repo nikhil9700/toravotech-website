@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Monitors — {{ workspace.name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="section-head">
+    <h1>Monitors</h1>
+    {% if can_manage %}
+      <a class="btn" href="{% url 'monitoring:monitor_create' %}">New monitor</a>
+    {% endif %}
+  </div>
+  <ul class="plain-list">
+    {% for monitor in monitors %}
+      <li>
+        <a href="{% url 'monitoring:monitor_detail' monitor.id %}"><strong>{{ monitor.name }}</strong></a>
+        <span class="badge badge-{{ monitor.state }}">{{ monitor.get_state_display }}</span>
+        <span class="muted">{{ monitor.get_source_type_display }} · {{ monitor.get_check_type_display }}</span>
+      </li>
+    {% empty %}
+      <li class="muted">No monitors yet.</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Interactive demo — {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <h1>Interactive demo</h1>
+  <p class="section-lede">Pick a failure mode. We run the same evaluator the worker uses — no account required.</p>
+
+  <div class="demo-grid">
+    {% for key, scenario in scenarios.items %}
+      <button
+        type="button"
+        class="demo-card"
+        data-scenario="{{ key }}"
+        data-url="{% url 'demo:run_scenario' %}"
+      >
+        <span class="demo-label">{{ scenario.label }}</span>
+        <span class="demo-story">{{ scenario.story }}</span>
+      </button>
+    {% endfor %}
+  </div>
+
+  <div id="demo-result" class="demo-result" hidden>
+    <p class="demo-status"></p>
+    <p class="demo-message"></p>
+    <pre class="demo-observed"></pre>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const result = document.getElementById("demo-result");
+  const csrf = "{{ csrf_token }}";
+  document.querySelectorAll(".demo-card").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const body = new FormData();
+      body.append("scenario", btn.dataset.scenario);
+      body.append("csrfmiddlewaretoken", csrf);
+      const res = await fetch(btn.dataset.url, { method: "POST", body });
+      const data = await res.json();
+      result.hidden = false;
+      result.querySelector(".demo-status").textContent = `${data.label} → ${data.status.toUpperCase()}`;
+      result.querySelector(".demo-status").dataset.status = data.status;
+      result.querySelector(".demo-message").textContent = data.message;
+      result.querySelector(".demo-observed").textContent = JSON.stringify(data.observed, null, 2);
+    });
+  });
+</script>
+{% endblock %}

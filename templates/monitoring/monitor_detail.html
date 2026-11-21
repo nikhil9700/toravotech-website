@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}{{ monitor.name }} — {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <p class="eyebrow"><a href="{% url 'monitoring:monitor_list' %}">Monitors</a></p>
+  <h1>{{ monitor.name }}</h1>
+  <p class="section-lede">
+    {{ monitor.get_source_type_display }} · {{ monitor.get_check_type_display }}
+    · <span class="badge badge-{{ monitor.state }}">{{ monitor.get_state_display }}</span>
+  </p>
+
+  {% if can_manage %}
+    <div class="cta-row">
+      <a class="btn btn-ghost" href="{% url 'monitoring:monitor_edit' monitor.id %}">Edit</a>
+      {% if monitor.state != "active" %}
+        <form method="post" action="{% url 'monitoring:monitor_activate' monitor.id %}" class="inline-form">
+          {% csrf_token %}
+          <button class="btn" type="submit">Activate</button>
+        </form>
+      {% else %}
+        <form method="post" action="{% url 'monitoring:monitor_pause' monitor.id %}" class="inline-form">
+          {% csrf_token %}
+          <button class="btn btn-ghost" type="submit">Pause</button>
+        </form>
+      {% endif %}
+      <form method="post" action="{% url 'monitoring:monitor_run_now' monitor.id %}" class="inline-form">
+        {% csrf_token %}
+        <button class="btn" type="submit">Run now</button>
+      </form>
+    </div>
+  {% endif %}
+
+  <h2>Recent runs</h2>
+  <ul class="plain-list">
+    {% for run in runs %}
+      <li>
+        <span class="badge badge-{{ run.status }}">{{ run.status }}</span>
+        {{ run.message }}
+        <span class="muted">{{ run.started_at }}</span>
+      </li>
+    {% empty %}
+      <li class="muted">No runs yet.</li>
+    {% endfor %}
+  </ul>
+
+  <h2>Incidents</h2>
+  <ul class="plain-list">
+    {% for incident in incidents %}
+      <li>
+        <strong>{{ incident.title }}</strong>
+        <span class="badge badge-{{ incident.status }}">{{ incident.status }}</span>
+        <span class="muted">{{ incident.summary }}</span>
+      </li>
+    {% empty %}
+      <li class="muted">No incidents.</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

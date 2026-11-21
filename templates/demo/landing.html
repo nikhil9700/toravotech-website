@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}{{ SITE_NAME }} — Know when the feed stalls{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <p class="brand-mark">{{ SITE_NAME }}</p>
+    <h1>Know when the feed stalls — before the business asks.</h1>
+    <p class="lede">
+      Monitor S3 arrivals and Snowflake freshness. Open incidents when data is late,
+      thin, or stale. Built for ops teams that already ship pipelines.
+    </p>
+    <div class="cta-row">
+      <a class="btn" href="{% url 'account_signup' %}">Start free beta</a>
+      <a class="btn btn-ghost" href="{% url 'demo:landing' %}">Run interactive demo</a>
+    </div>
+  </div>
+  <div class="hero-visual" aria-hidden="true">
+    <div class="signal-panel">
+      <div class="signal-row ok"><span>orders/daily.parquet</span><span>PASS</span></div>
+      <div class="signal-row fail"><span>snowflake.sales_fact</span><span>FAIL · 6h stale</span></div>
+      <div class="signal-row ok"><span>inventory_snapshot</span><span>PASS</span></div>
+      <div class="signal-pulse"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>What you get in beta</h2>
+  <p class="section-lede">Three active monitors per workspace. Email alerts. S3 AssumeRole and Snowflake connectors.</p>
+  <ul class="feature-list">
+    <li><strong>Arrival</strong> — did the expected object land on time?</li>
+    <li><strong>Row count</strong> — is the load within bounds?</li>
+    <li><strong>Freshness</strong> — is the watermark still moving?</li>
+  </ul>
+</section>
+{% endblock %}

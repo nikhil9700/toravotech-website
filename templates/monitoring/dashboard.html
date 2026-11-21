@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — {{ workspace.name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">{{ workspace.name }}</p>
+      <h1>Dashboard</h1>
+      <p class="section-lede">
+        {{ active_count }} / {{ monitor_limit }} active monitors
+        {% if can_manage %}· <a href="{% url 'monitoring:monitor_create' %}">New monitor</a>{% endif %}
+      </p>
+    </div>
+  </div>
+
+  <h2>Open incidents</h2>
+  {% if open_incidents %}
+    <ul class="plain-list">
+      {% for incident in open_incidents %}
+        <li>
+          <strong>{{ incident.title }}</strong>
+          <span class="muted">{{ incident.summary }}</span>
+          {% if can_manage %}
+            <form method="post" action="{% url 'monitoring:incident_ack' incident.id %}" class="inline-form">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-small btn-ghost">Acknowledge</button>
+            </form>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="muted">No open incidents.</p>
+  {% endif %}
+
+  <h2>Monitors</h2>
+  <ul class="plain-list">
+    {% for monitor in monitors %}
+      <li>
+        <a href="{% url 'monitoring:monitor_detail' monitor.id %}"><strong>{{ monitor.name }}</strong></a>
+        <span class="badge badge-{{ monitor.state }}">{{ monitor.get_state_display }}</span>
+        <span class="muted">{{ monitor.last_status|default:"never checked" }}</span>
+      </li>
+    {% empty %}
+      <li class="muted">No monitors yet.</li>
+    {% endfor %}
+  </ul>
+
+  <h2>Recent checks</h2>
+  <ul class="plain-list">
+    {% for run in recent_runs %}
+      <li>
+        <span class="badge badge-{{ run.status }}">{{ run.status }}</span>
+        {{ run.monitor.name }} — {{ run.message }}
+        <span class="muted">{{ run.started_at }}</span>
+      </li>
+    {% empty %}
+      <li class="muted">No checks yet. Activate a monitor or run one now.</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}
