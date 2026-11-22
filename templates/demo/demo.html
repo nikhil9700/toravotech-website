@@ -1,32 +1,41 @@
 {% extends "base.html" %}
 
-{% block title %}Interactive demo — {{ SITE_NAME }}{% endblock %}
+{% block title %}How checks work — {{ SITE_NAME }}{% endblock %}
+{% block body_class %}page-app{% endblock %}
 
 {% block content %}
-<section class="section">
-  <h1>Interactive demo</h1>
-  <p class="section-lede">Pick a failure mode. We run the same evaluator the worker uses — no account required.</p>
-
-  <div class="demo-grid">
-    {% for key, scenario in scenarios.items %}
-      <button
-        type="button"
-        class="demo-card"
-        data-scenario="{{ key }}"
-        data-url="{% url 'demo:run_scenario' %}"
-      >
-        <span class="demo-label">{{ scenario.label }}</span>
-        <span class="demo-story">{{ scenario.story }}</span>
-      </button>
-    {% endfor %}
+<section class="app-hero">
+  <div>
+    <p class="eyebrow">Evaluator</p>
+    <h1>How checks work</h1>
+    <p class="section-lede">
+      Try the same pass/fail logic the app uses, then open a service to configure a live monitor.
+    </p>
   </div>
-
-  <div id="demo-result" class="demo-result" hidden>
-    <p class="demo-status"></p>
-    <p class="demo-message"></p>
-    <pre class="demo-observed"></pre>
+  <div class="cta-row">
+    <a class="btn" href="{% url 'home' %}">Browse services</a>
   </div>
 </section>
+
+<div class="demo-grid">
+  {% for key, scenario in scenarios.items %}
+    <button
+      type="button"
+      class="demo-card"
+      data-scenario="{{ key }}"
+      data-url="{% url 'demo:run_scenario' %}"
+    >
+      <span class="demo-label">{{ scenario.label }}</span>
+      <span class="demo-story">{{ scenario.story }}</span>
+    </button>
+  {% endfor %}
+</div>
+
+<div id="demo-result" class="demo-result" hidden>
+  <p class="demo-status"></p>
+  <p class="demo-message"></p>
+  <pre class="demo-observed"></pre>
+</div>
 {% endblock %}
 
 {% block extra_js %}

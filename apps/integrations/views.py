@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.integrations.forms import ConnectorForm
@@ -7,11 +6,10 @@ from apps.integrations.models import Connector
 from apps.workspaces.services import user_can_manage, user_can_view
 
 
-@login_required
 def connector_list(request):
     workspace = request.workspace
     if not workspace or not user_can_view(request.user, workspace):
-        return redirect("account_login")
+        return redirect("home")
     return render(
         request,
         "integrations/connector_list.html",
@@ -23,14 +21,23 @@ def connector_list(request):
     )
 
 
-@login_required
 def connector_create(request):
     workspace = request.workspace
     if not workspace or not user_can_manage(request.user, workspace):
-        messages.error(request, "Only owners can add connectors.")
+        messages.error(request, "You cannot add connectors here.")
         return redirect("integrations:connector_list")
 
-    form = ConnectorForm(request.POST or None)
+    initial = {}
+    if request.method == "GET":
+        kind = request.GET.get("kind")
+        if kind in Connector.Kind.values:
+            initial["kind"] = kind
+            if kind == Connector.Kind.S3:
+                initial["name"] = "S3 connection"
+            elif kind == Connector.Kind.SNOWFLAKE:
+                initial["name"] = "Snowflake connection"
+
+    form = ConnectorForm(request.POST or None, initial=initial or None)
     if request.method == "POST" and form.is_valid():
         connector = form.save(commit=False)
         connector.workspace = workspace
@@ -45,11 +52,10 @@ def connector_create(request):
     )
 
 
-@login_required
 def connector_edit(request, connector_id):
     workspace = request.workspace
     if not workspace or not user_can_manage(request.user, workspace):
-        messages.error(request, "Only owners can edit connectors.")
+        messages.error(request, "You cannot edit connectors here.")
         return redirect("integrations:connector_list")
 
     connector = get_object_or_404(Connector, id=connector_id, workspace=workspace)

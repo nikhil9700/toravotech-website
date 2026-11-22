@@ -24,6 +24,9 @@ class ConnectorForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            css = field.widget.attrs.get("class", "")
+            field.widget.attrs["class"] = f"{css} field-control".strip()
         config = (self.instance.config if self.instance and self.instance.pk else {}) or {}
         for field in (
             "bucket",

@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET, require_POST
 
+from apps.demo.services_catalog import SERVICES, services_by_group
 from apps.monitoring.evaluator import evaluate_monitor
 from apps.monitoring.models import Monitor
 
@@ -40,7 +41,14 @@ SCENARIOS = {
 
 @require_GET
 def home(request):
-    return render(request, "demo/landing.html", {"scenarios": SCENARIOS})
+    return render(
+        request,
+        "demo/services.html",
+        {
+            "services": SERVICES,
+            "service_groups": services_by_group(),
+        },
+    )
 
 
 @require_GET

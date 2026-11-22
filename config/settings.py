@@ -6,7 +6,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(
     DJANGO_DEBUG=(bool, False),
-    BETA_MONITOR_LIMIT=(int, 3),
     USE_FIXTURE_INTEGRATIONS=(bool, True),
     EMAIL_USE_TLS=(bool, False),
     COLLECTOR_HMAC_MAX_SKEW_SECONDS=(int, 300),
@@ -21,8 +20,7 @@ CSRF_TRUSTED_ORIGINS = env.list("DJANGO_CSRF_TRUSTED_ORIGINS", default=[])
 
 SITE_NAME = env("SITE_NAME", default="ToravoTech")
 SITE_URL = env("SITE_URL", default="http://localhost:8000")
-SUPPORT_EMAIL = env("SUPPORT_EMAIL", default="thakurnikhilsingh4@gmail.com")
-BETA_MONITOR_LIMIT = env("BETA_MONITOR_LIMIT")
+SUPPORT_EMAIL = env("SUPPORT_EMAIL", default="support@toravotech.com")
 USE_FIXTURE_INTEGRATIONS = env("USE_FIXTURE_INTEGRATIONS")
 FIELD_ENCRYPTION_KEY = env("FIELD_ENCRYPTION_KEY", default="")
 COLLECTOR_HMAC_MAX_SKEW_SECONDS = env("COLLECTOR_HMAC_MAX_SKEW_SECONDS")

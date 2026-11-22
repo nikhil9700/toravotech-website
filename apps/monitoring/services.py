@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from django.conf import settings
 from django.db import transaction
 from django.utils import timezone
 
@@ -8,21 +7,6 @@ from apps.integrations.collector import collect_for_monitor
 from apps.monitoring.evaluator import evaluate_monitor
 from apps.monitoring.models import CheckRun, Incident, Monitor
 from apps.monitoring.notifications import notify_incident_opened
-
-
-class MonitorLimitExceeded(Exception):
-    pass
-
-
-def assert_can_activate(monitor: Monitor) -> None:
-    workspace = monitor.workspace
-    active = workspace.monitors.filter(state=Monitor.State.ACTIVE).exclude(
-        pk=monitor.pk
-    )
-    if active.count() >= settings.BETA_MONITOR_LIMIT:
-        raise MonitorLimitExceeded(
-            f"Beta limit is {settings.BETA_MONITOR_LIMIT} active monitors per workspace."
-        )
 
 
 @transaction.atomic

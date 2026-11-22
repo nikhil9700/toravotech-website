@@ -37,6 +37,9 @@ class MonitorForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            css = field.widget.attrs.get("class", "")
+            field.widget.attrs["class"] = f"{css} field-control".strip()
         if self.instance and self.instance.pk:
             threshold = self.instance.threshold_json or {}
             connector = self.instance.connector_ref or {}

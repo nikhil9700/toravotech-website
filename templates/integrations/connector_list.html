@@ -1,27 +1,44 @@
 {% extends "base.html" %}
 
 {% block title %}Connections — {{ workspace.name }}{% endblock %}
+{% block body_class %}page-app{% endblock %}
 
 {% block content %}
-<section class="section">
-  <div class="section-head">
+<section class="app-hero">
+  <div>
+    <p class="eyebrow">{{ workspace.name }}</p>
     <h1>Connections</h1>
-    {% if can_manage %}
-      <a class="btn" href="{% url 'integrations:connector_create' %}">Add connector</a>
-    {% endif %}
+    <p class="section-lede">S3 and Snowflake connectors your monitors can reuse.</p>
   </div>
-  <ul class="plain-list">
-    {% for connector in connectors %}
-      <li>
-        <strong>{{ connector.name }}</strong>
-        <span class="muted">{{ connector.get_kind_display }} · {{ connector.get_status_display }}</span>
-        {% if can_manage %}
-          <a href="{% url 'integrations:connector_edit' connector.id %}">Edit</a>
-        {% endif %}
-      </li>
-    {% empty %}
-      <li class="muted">No connectors yet. Add S3 or Snowflake to wire live checks.</li>
-    {% endfor %}
-  </ul>
+  {% if can_manage %}
+    <div class="cta-row">
+      <a class="btn" href="{% url 'integrations:connector_create' %}">Add connector</a>
+      <a class="btn btn-ghost" href="{% url 'home' %}#s3-connection">Pick from services</a>
+    </div>
+  {% endif %}
 </section>
+
+{% if connectors %}
+  <div class="tile-grid tile-grid-2">
+    {% for connector in connectors %}
+      <article class="tile-card tile-static">
+        <div class="tile-card-top">
+          <span class="badge badge-{{ connector.status }}">{{ connector.get_status_display }}</span>
+          <span class="muted">{{ connector.get_kind_display }}</span>
+        </div>
+        <h2>{{ connector.name }}</h2>
+        {% if can_manage %}
+          <p class="tile-meta"><a href="{% url 'integrations:connector_edit' connector.id %}">Edit connection →</a></p>
+        {% endif %}
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="panel">
+    <div class="empty-state">
+      <p>No connectors yet. Add S3 or Snowflake to wire live checks.</p>
+      <a class="btn" href="{% url 'home' %}#s3-connection">Browse connection services</a>
+    </div>
+  </div>
+{% endif %}
 {% endblock %}

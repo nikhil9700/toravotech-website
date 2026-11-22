@@ -50,9 +50,9 @@ python manage.py run_monitoring_worker
 pytest
 ```
 
-## Beta limits
+## Pricing
 
-- 3 active monitors per workspace (`BETA_MONITOR_LIMIT`)
+- Completely free: unlimited monitors, email alerts, S3 and Snowflake connectors
 - Email notifications via SMTP (Mailpit locally)
 
 ## Deploy notes

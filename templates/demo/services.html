@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Services — {{ SITE_NAME }}{% endblock %}
+
+{% block body_class %}page-services{% endblock %}
+
+{% block content %}
+<section class="svc-hero">
+  <h1>Our services</h1>
+  <p class="lede">Click a service to start using it.</p>
+</section>
+
+<div class="svc-grid">
+  {% for service in services %}
+    <a class="svc-card" id="{{ service.slug }}" href="{{ service.href }}">
+      <span class="svc-icon" aria-hidden="true">
+        {% if service.icon == "arrival" %}
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 16.5V19a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2.5M12 4v12m0 0-4-4m4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        {% elif service.icon == "rows" %}
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h10M4 18h13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="19" cy="12" r="1.4" fill="currentColor"/></svg>
+        {% elif service.icon == "freshness" %}
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/><path d="M12 8v4.5L15 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        {% elif service.icon == "s3" %}
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 8.5 12 5l8 3.5v7L12 19l-8-3.5v-7Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 12v7M4 8.5l8 3.5 8-3.5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        {% elif service.icon == "snowflake" %}
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M5.5 6.5l13 11M18.5 6.5l-13 11M4 12h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        {% else %}
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="4.5" width="7" height="6" rx="1.2" stroke="currentColor" stroke-width="1.6"/><rect x="13.5" y="4.5" width="7" height="6" rx="1.2" stroke="currentColor" stroke-width="1.6"/><rect x="3.5" y="13.5" width="17" height="6" rx="1.2" stroke="currentColor" stroke-width="1.6"/></svg>
+        {% endif %}
+      </span>
+      <h2>{{ service.name }}</h2>
+      <p class="svc-card-tagline">{{ service.tagline }}</p>
+      <p class="svc-card-desc">{{ service.description }}</p>
+      <span class="svc-card-cta">{{ service.action_label }}</span>
+    </a>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,18 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}Start beta — {{ SITE_NAME }}{% endblock %}
+{% block title %}Signup closed — {{ SITE_NAME }}{% endblock %}
 
 {% block content %}
 <section class="section narrow">
-  <h1>Start free beta</h1>
-  <p class="section-lede">Create a workspace and get 3 active monitors.</p>
-  <form method="post" class="stack-form" action="{% url 'account_signup' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    {% if redirect_field_value %}
-      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
-    {% endif %}
-    <button class="btn" type="submit">Create account</button>
-  </form>
+  <h1>Accounts are closed for now</h1>
+  <p class="section-lede">
+    We’re finishing testing. Public signup and sign-in will open later.
+  </p>
+  <div class="cta-row">
+    <a class="btn" href="{% url 'home' %}">Back home</a>
+  </div>
 </section>
 {% endblock %}

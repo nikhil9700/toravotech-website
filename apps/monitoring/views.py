@@ -1,18 +1,17 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
 from apps.monitoring.forms import MonitorForm
 from apps.monitoring.models import Incident, Monitor
-from apps.monitoring.services import MonitorLimitExceeded, assert_can_activate, run_monitor_check
+from apps.monitoring.services import run_monitor_check
 from apps.workspaces.services import user_can_manage, user_can_view
 
 
 def _require_workspace(request):
     workspace = request.workspace
     if not workspace:
-        messages.error(request, "Create or join a workspace first.")
+        messages.error(request, "Workspace unavailable.")
         return None
     if not user_can_view(request.user, workspace):
         messages.error(request, "You do not have access to this workspace.")
@@ -20,17 +19,17 @@ def _require_workspace(request):
     return workspace
 
 
-@login_required
 def dashboard(request):
     workspace = _require_workspace(request)
     if not workspace:
-        return redirect("account_login")
+        return redirect("home")
 
     monitors = workspace.monitors.all()
-    open_incidents = Incident.objects.filter(
+    open_qs = Incident.objects.filter(
         monitor__workspace=workspace,
         status=Incident.Status.OPEN,
-    ).select_related("monitor")[:20]
+    ).select_related("monitor")
+    open_incidents = list(open_qs[:20])
     recent_runs = []
     for monitor in monitors:
         run = monitor.check_runs.first()
@@ -44,21 +43,20 @@ def dashboard(request):
             "workspace": workspace,
             "monitors": monitors,
             "open_incidents": open_incidents,
+            "open_incident_count": open_qs.count(),
             "recent_runs": sorted(
                 recent_runs, key=lambda r: r.started_at, reverse=True
             )[:10],
             "can_manage": user_can_manage(request.user, workspace),
-            "monitor_limit": workspace.monitor_limit,
             "active_count": workspace.active_monitor_count,
         },
     )
 
 
-@login_required
 def monitor_list(request):
     workspace = _require_workspace(request)
     if not workspace:
-        return redirect("account_login")
+        return redirect("home")
     return render(
         request,
         "monitoring/monitor_list.html",
@@ -70,16 +68,24 @@ def monitor_list(request):
     )
 
 
-@login_required
 def monitor_create(request):
     workspace = _require_workspace(request)
     if not workspace:
-        return redirect("account_login")
+        return redirect("home")
     if not user_can_manage(request.user, workspace):
-        messages.error(request, "Only owners can create monitors.")
+        messages.error(request, "You cannot create monitors here.")
         return redirect("monitoring:dashboard")
 
-    form = MonitorForm(request.POST or None)
+    initial = {}
+    if request.method == "GET":
+        check_type = request.GET.get("check_type")
+        source_type = request.GET.get("source_type")
+        if check_type in Monitor.CheckType.values:
+            initial["check_type"] = check_type
+        if source_type in Monitor.SourceType.values:
+            initial["source_type"] = source_type
+
+    form = MonitorForm(request.POST or None, initial=initial or None)
     if request.method == "POST" and form.is_valid():
         monitor = form.save(commit=False)
         monitor.workspace = workspace
@@ -95,11 +101,10 @@ def monitor_create(request):
     )
 
 
-@login_required
 def monitor_detail(request, monitor_id):
     workspace = _require_workspace(request)
     if not workspace:
-        return redirect("account_login")
+        return redirect("home")
     monitor = get_object_or_404(Monitor, id=monitor_id, workspace=workspace)
     return render(
         request,
@@ -114,13 +119,12 @@ def monitor_detail(request, monitor_id):
     )
 
 
-@login_required
 def monitor_edit(request, monitor_id):
     workspace = _require_workspace(request)
     if not workspace:
-        return redirect("account_login")
+        return redirect("home")
     if not user_can_manage(request.user, workspace):
-        messages.error(request, "Only owners can edit monitors.")
+        messages.error(request, "You cannot edit monitors here.")
         return redirect("monitoring:dashboard")
 
     monitor = get_object_or_404(Monitor, id=monitor_id, workspace=workspace)
@@ -142,30 +146,24 @@ def monitor_edit(request, monitor_id):
     )
 
 
-@login_required
 @require_POST
 def monitor_activate(request, monitor_id):
     workspace = _require_workspace(request)
     if not workspace or not user_can_manage(request.user, workspace):
-        messages.error(request, "Only owners can activate monitors.")
+        messages.error(request, "You cannot activate monitors here.")
         return redirect("monitoring:dashboard")
     monitor = get_object_or_404(Monitor, id=monitor_id, workspace=workspace)
-    try:
-        assert_can_activate(monitor)
-        monitor.state = Monitor.State.ACTIVE
-        monitor.save(update_fields=["state", "updated_at"])
-        messages.success(request, f"{monitor.name} is now active.")
-    except MonitorLimitExceeded as exc:
-        messages.error(request, str(exc))
+    monitor.state = Monitor.State.ACTIVE
+    monitor.save(update_fields=["state", "updated_at"])
+    messages.success(request, f"{monitor.name} is now active.")
     return redirect("monitoring:monitor_detail", monitor_id=monitor.id)
 
 
-@login_required
 @require_POST
 def monitor_pause(request, monitor_id):
     workspace = _require_workspace(request)
     if not workspace or not user_can_manage(request.user, workspace):
-        messages.error(request, "Only owners can pause monitors.")
+        messages.error(request, "You cannot pause monitors here.")
         return redirect("monitoring:dashboard")
     monitor = get_object_or_404(Monitor, id=monitor_id, workspace=workspace)
     monitor.state = Monitor.State.PAUSED
@@ -174,12 +172,11 @@ def monitor_pause(request, monitor_id):
     return redirect("monitoring:monitor_detail", monitor_id=monitor.id)
 
 
-@login_required
 @require_POST
 def monitor_run_now(request, monitor_id):
     workspace = _require_workspace(request)
     if not workspace or not user_can_manage(request.user, workspace):
-        messages.error(request, "Only owners can run checks.")
+        messages.error(request, "You cannot run checks here.")
         return redirect("monitoring:dashboard")
     monitor = get_object_or_404(Monitor, id=monitor_id, workspace=workspace)
     check_run = run_monitor_check(monitor)
@@ -187,12 +184,11 @@ def monitor_run_now(request, monitor_id):
     return redirect("monitoring:monitor_detail", monitor_id=monitor.id)
 
 
-@login_required
 @require_POST
 def incident_ack(request, incident_id):
     workspace = _require_workspace(request)
     if not workspace or not user_can_manage(request.user, workspace):
-        messages.error(request, "Only owners can acknowledge incidents.")
+        messages.error(request, "You cannot acknowledge incidents here.")
         return redirect("monitoring:dashboard")
     incident = get_object_or_404(
         Incident, id=incident_id, monitor__workspace=workspace

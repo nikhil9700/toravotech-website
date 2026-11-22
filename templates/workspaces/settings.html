@@ -1,60 +1,99 @@
 {% extends "base.html" %}
 
 {% block title %}Workspace — {{ workspace.name }}{% endblock %}
+{% block body_class %}page-app{% endblock %}
 
 {% block content %}
-<section class="section narrow">
-  <h1>{{ workspace.name }}</h1>
-  <p class="section-lede">Slug: {{ workspace.slug }}</p>
+<section class="app-hero">
+  <div>
+    <p class="eyebrow">Workspace</p>
+    <h1>{{ workspace.name }}</h1>
+    <p class="section-lede">
+      Slug <code class="code-inline">{{ workspace.slug }}</code>
+      · open access while we finish testing
+    </p>
+  </div>
+  <div class="cta-row">
+    <a class="btn btn-ghost" href="{% url 'monitoring:dashboard' %}">Back to dashboard</a>
+  </div>
+</section>
 
-  <h2>Members</h2>
-  <ul class="plain-list">
-    {% for membership in memberships %}
-      <li>{{ membership.user.email }} · {{ membership.get_role_display }}</li>
-    {% endfor %}
-  </ul>
-
-  {% if can_manage %}
-    <h2>Invite</h2>
-    <form method="post" action="{% url 'workspaces:invite' %}" class="stack-form">
-      {% csrf_token %}
-      <p>
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" required>
-      </p>
-      <p>
-        <label for="role">Role</label>
-        <select id="role" name="role">
-          <option value="viewer">Viewer</option>
-          <option value="owner">Owner</option>
-        </select>
-      </p>
-      <button class="btn" type="submit">Create invitation</button>
-    </form>
-  {% endif %}
-
-  <h2>Pending invitations</h2>
-  <ul class="plain-list">
-    {% for invitation in invitations %}
-      <li>{{ invitation.email }} · {{ invitation.get_role_display }} · expires {{ invitation.expires_at }}</li>
-    {% empty %}
-      <li class="muted">None</li>
-    {% endfor %}
-  </ul>
-
-  {% if user_workspaces|length > 1 %}
-    <h2>Switch workspace</h2>
-    <ul class="plain-list">
-      {% for ws in user_workspaces %}
-        <li>
-          {% if ws.id == workspace.id %}
-            <strong>{{ ws.name }}</strong> (current)
-          {% else %}
-            <a href="{% url 'workspaces:switch' ws.id %}">{{ ws.name }}</a>
-          {% endif %}
+<section class="panel">
+  <div class="panel-head"><h2>Members</h2></div>
+  {% if memberships %}
+    <ul class="data-list">
+      {% for membership in memberships %}
+        <li class="data-row">
+          <div class="data-main">
+            <strong>{{ membership.user.email|default:membership.user.username }}</strong>
+          </div>
+          <div class="data-side">
+            <span class="badge">{{ membership.get_role_display }}</span>
+          </div>
         </li>
       {% endfor %}
     </ul>
+  {% else %}
+    <div class="empty-state">
+      <p>This is the open sandbox workspace. Member invites open with accounts later.</p>
+    </div>
   {% endif %}
 </section>
+
+{% if can_manage and user.is_authenticated %}
+<section class="panel form-panel">
+  <div class="panel-head"><h2>Invite</h2></div>
+  <form method="post" action="{% url 'workspaces:invite' %}" class="stack-form">
+    {% csrf_token %}
+    <p>
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required>
+    </p>
+    <p>
+      <label for="role">Role</label>
+      <select id="role" name="role">
+        <option value="viewer">Viewer</option>
+        <option value="owner">Owner</option>
+      </select>
+    </p>
+    <button class="btn" type="submit">Create invitation</button>
+  </form>
+</section>
+{% endif %}
+
+<section class="panel">
+  <div class="panel-head"><h2>Pending invitations</h2></div>
+  {% if invitations %}
+    <ul class="data-list">
+      {% for invitation in invitations %}
+        <li class="data-row">
+          <div class="data-main">
+            <strong>{{ invitation.email }}</strong>
+            <span class="muted">{{ invitation.get_role_display }} · expires {{ invitation.expires_at }}</span>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="empty-state"><p>No pending invitations.</p></div>
+  {% endif %}
+</section>
+
+{% if user_workspaces|length > 1 %}
+<section class="panel">
+  <div class="panel-head"><h2>Switch workspace</h2></div>
+  <ul class="data-list">
+    {% for ws in user_workspaces %}
+      <li class="data-row">
+        {% if ws.id == workspace.id %}
+          <strong>{{ ws.name }}</strong>
+          <span class="badge badge-active">current</span>
+        {% else %}
+          <a href="{% url 'workspaces:switch' ws.id %}">{{ ws.name }}</a>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
 {% endblock %}

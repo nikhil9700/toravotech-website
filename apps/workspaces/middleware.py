@@ -1,14 +1,16 @@
 from django.utils.functional import SimpleLazyObject
 
-from apps.workspaces.services import user_workspaces
+from apps.workspaces.services import get_or_create_sandbox_workspace, user_workspaces
 
 
 def _resolve_workspace(request):
     if not request.user.is_authenticated:
-        return None
+        return get_or_create_sandbox_workspace()
+
     workspaces = list(user_workspaces(request.user))
     if not workspaces:
-        return None
+        return get_or_create_sandbox_workspace()
+
     workspace_id = request.session.get("active_workspace_id")
     if workspace_id:
         for workspace in workspaces:

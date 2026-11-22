@@ -19,14 +19,16 @@ def switch_workspace(request, workspace_id):
     return redirect("monitoring:dashboard")
 
 
-@login_required
 def invite_member(request):
     workspace = request.workspace
     if not workspace or not user_can_manage(request.user, workspace):
-        messages.error(request, "Only owners can invite members.")
+        messages.error(request, "You cannot invite members here.")
         return redirect("monitoring:dashboard")
 
     if request.method == "POST":
+        if not request.user.is_authenticated:
+            messages.error(request, "Invites need an account — coming after testing.")
+            return redirect("workspaces:settings")
         email = request.POST.get("email", "").strip().lower()
         role = request.POST.get("role", Membership.Role.VIEWER)
         if role not in Membership.Role.values:
@@ -51,15 +53,15 @@ def invite_member(request):
             "invitations": workspace.invitations.filter(
                 status=Invitation.Status.PENDING
             ),
+            "can_manage": user_can_manage(request.user, workspace),
         },
     )
 
 
-@login_required
 def workspace_settings(request):
     workspace = request.workspace
     if not workspace:
-        return redirect("account_login")
+        return redirect("home")
     return render(
         request,
         "workspaces/settings.html",

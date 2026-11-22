@@ -16,7 +16,7 @@ class Monitor(models.Model):
     class SourceType(models.TextChoices):
         S3 = "s3", "Amazon S3"
         SNOWFLAKE = "snowflake", "Snowflake"
-        DEMO = "demo", "Demo"
+        DEMO = "demo", "Sample data"
 
     class CheckType(models.TextChoices):
         ARRIVAL = "arrival", "Arrival"

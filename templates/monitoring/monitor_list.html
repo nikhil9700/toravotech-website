@@ -1,25 +1,45 @@
 {% extends "base.html" %}
 
 {% block title %}Monitors — {{ workspace.name }}{% endblock %}
+{% block body_class %}page-app{% endblock %}
 
 {% block content %}
-<section class="section">
-  <div class="section-head">
+<section class="app-hero">
+  <div>
+    <p class="eyebrow">{{ workspace.name }}</p>
     <h1>Monitors</h1>
-    {% if can_manage %}
-      <a class="btn" href="{% url 'monitoring:monitor_create' %}">New monitor</a>
-    {% endif %}
+    <p class="section-lede">Arrival, row count, and freshness checks for your feeds.</p>
   </div>
-  <ul class="plain-list">
-    {% for monitor in monitors %}
-      <li>
-        <a href="{% url 'monitoring:monitor_detail' monitor.id %}"><strong>{{ monitor.name }}</strong></a>
-        <span class="badge badge-{{ monitor.state }}">{{ monitor.get_state_display }}</span>
-        <span class="muted">{{ monitor.get_source_type_display }} · {{ monitor.get_check_type_display }}</span>
-      </li>
-    {% empty %}
-      <li class="muted">No monitors yet.</li>
-    {% endfor %}
-  </ul>
+  {% if can_manage %}
+    <div class="cta-row">
+      <a class="btn" href="{% url 'monitoring:monitor_create' %}">New monitor</a>
+      <a class="btn btn-ghost" href="{% url 'home' %}#arrival">Pick from services</a>
+    </div>
+  {% endif %}
 </section>
+
+{% if monitors %}
+  <div class="tile-grid">
+    {% for monitor in monitors %}
+      <a class="tile-card" href="{% url 'monitoring:monitor_detail' monitor.id %}">
+        <div class="tile-card-top">
+          <span class="badge badge-{{ monitor.state }}">{{ monitor.get_state_display }}</span>
+          <span class="badge badge-{{ monitor.last_status|default:'draft' }}">{{ monitor.last_status|default:"unchecked" }}</span>
+        </div>
+        <h2>{{ monitor.name }}</h2>
+        <p class="muted">{{ monitor.get_check_type_display }} · {{ monitor.get_source_type_display }}</p>
+        <p class="tile-meta">
+          {% if monitor.last_checked_at %}Last checked {{ monitor.last_checked_at }}{% else %}Never checked{% endif %}
+        </p>
+      </a>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="panel">
+    <div class="empty-state">
+      <p>No monitors yet. Start from a service or create one.</p>
+      <a class="btn" href="{% url 'home' %}">Browse services</a>
+    </div>
+  </div>
+{% endif %}
 {% endblock %}

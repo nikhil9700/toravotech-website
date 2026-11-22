@@ -25,13 +25,6 @@ class Workspace(models.Model):
     def active_monitor_count(self) -> int:
         return self.monitors.filter(state="active").count()
 
-    @property
-    def monitor_limit(self) -> int:
-        from django.conf import settings as dj_settings
-
-        return dj_settings.BETA_MONITOR_LIMIT
-
-
 class Membership(models.Model):
     class Role(models.TextChoices):
         OWNER = "owner", "Owner"

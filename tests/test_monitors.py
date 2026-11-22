@@ -2,46 +2,38 @@ import pytest
 from django.contrib.auth import get_user_model
 
 from apps.monitoring.models import Monitor
-from apps.monitoring.services import MonitorLimitExceeded, assert_can_activate, run_monitor_check
+from apps.monitoring.services import run_monitor_check
 from apps.workspaces.services import create_workspace_for_owner
 
 User = get_user_model()
 
 
 @pytest.mark.django_db
-def test_beta_monitor_limit(settings):
-    settings.BETA_MONITOR_LIMIT = 3
-    user = User.objects.create_user(username="a@example.com", email="a@example.com", password="x")
+def test_unlimited_activate():
+    user = User.objects.create_user(
+        username="a@example.com", email="a@example.com", password="x"
+    )
     workspace = create_workspace_for_owner(owner=user, name="Ops")
-    monitors = []
-    for i in range(3):
-        m = Monitor.objects.create(
+    for i in range(5):
+        monitor = Monitor.objects.create(
             workspace=workspace,
             name=f"M{i}",
             source_type=Monitor.SourceType.DEMO,
             check_type=Monitor.CheckType.ARRIVAL,
-            state=Monitor.State.ACTIVE,
+            state=Monitor.State.DRAFT,
             connector_ref={"scenario": "healthy"},
             threshold_json={"max_age_minutes": 60},
         )
-        monitors.append(m)
-
-    extra = Monitor.objects.create(
-        workspace=workspace,
-        name="M3",
-        source_type=Monitor.SourceType.DEMO,
-        check_type=Monitor.CheckType.ARRIVAL,
-        state=Monitor.State.DRAFT,
-        connector_ref={"scenario": "healthy"},
-        threshold_json={"max_age_minutes": 60},
-    )
-    with pytest.raises(MonitorLimitExceeded):
-        assert_can_activate(extra)
+        monitor.state = Monitor.State.ACTIVE
+        monitor.save(update_fields=["state"])
+    assert workspace.monitors.filter(state=Monitor.State.ACTIVE).count() == 5
 
 
 @pytest.mark.django_db
-def test_demo_check_creates_incident_on_fail():
-    user = User.objects.create_user(username="b@example.com", email="b@example.com", password="x")
+def test_sample_check_creates_incident_on_fail():
+    user = User.objects.create_user(
+        username="b@example.com", email="b@example.com", password="x"
+    )
     workspace = create_workspace_for_owner(owner=user, name="Ops")
     monitor = Monitor.objects.create(
         workspace=workspace,
