@@ -55,6 +55,23 @@ pytest
 - Completely free: unlimited monitors, email alerts, S3 and Snowflake connectors
 - Email notifications via SMTP (Mailpit locally)
 
-## Deploy notes
+## Why GitHub push ≠ live site
 
-Production target: Railway (web + worker + Postgres). Keep GitHub Pages workflow removed — this is a dynamic Django app, not a static export. Point `toravotech.com` DNS at Railway after the app is healthy locally and you approve go-live.
+`toravotech.com` is still on **GitHub Pages** (old Next.js static site).  
+This repo is now **Django**, which cannot run on GitHub Pages.
+
+**Live path:** deploy Django to **Railway** (web + Postgres + optional worker), then point `toravotech.com` DNS to Railway and turn off GitHub Pages.
+
+### Railway (quick)
+
+1. Create a Railway project from this GitHub repo
+2. Add a Postgres plugin
+3. Set env vars (see `.env.example`), especially:
+   - `DJANGO_SECRET_KEY`
+   - `DJANGO_DEBUG=False`
+   - `DJANGO_ALLOWED_HOSTS` (Railway domain + `toravotech.com`)
+   - `DJANGO_CSRF_TRUSTED_ORIGINS` (`https://...`)
+   - `DATABASE_URL` (from Railway Postgres)
+4. Deploy web service with Dockerfile / `railway.toml`
+5. Add a second service for the worker: `/app/scripts/entrypoint.sh worker`
+6. Point Namecheap DNS A/CNAME away from GitHub Pages to Railway
